@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-nav-bar',
@@ -6,10 +6,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit {
+  @ViewChild('toggleButton')
+  toggleButton!: ElementRef;
+  
+  @ViewChild('menu')
+  menu!: ElementRef;
 
-  constructor() { }
+  isMenuOpen = false;
+
+  constructor(private renderer: Renderer2) {
+    /**
+     * This events get called by all clicks on the page
+     */
+    this.renderer.listen('window', 'click',(e: Event)=>{
+        if(!this.toggleButton.nativeElement.contains(e.target)){
+            this.isMenuOpen = false;
+        }
+    });
+  }
 
   ngOnInit(): void {
   }
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }
